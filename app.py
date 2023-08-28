@@ -1,3 +1,4 @@
+
 # API doc https://courses.ianapplebaum.com/public/docs/
 import requests
 
@@ -44,5 +45,4 @@ if __name__ == '__main__':
     parseSyllabus(response)
     #getSyllabus()
     #getUser()
-
 
