@@ -19,7 +19,8 @@ headers = {
 def getSyllabusById():
     fallSemesterId = "4"                                                                # Seems to be the ID number to return the fall 2023 info
     response = requests.get(URL + syllabusByIdApi + fallSemesterId, headers=headers).json()
-    print(response)
+    #print(response)
+    return response
 
 # Get request for api/syllabus/
 # Retrieves every syllabus for every semester
@@ -33,9 +34,14 @@ def getUser():
     response = requests.get(URL + userApi, headers=headers).json()
     print(response)
 
+# TODO Parse the json here
+def parseSyllabus(response):
+    print(response)
+
 
 if __name__ == '__main__':
-    getSyllabusById()
+    response = getSyllabusById()
+    parseSyllabus(response)
     #getSyllabus()
     #getUser()
 
