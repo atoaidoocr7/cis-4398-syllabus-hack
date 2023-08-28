@@ -3,8 +3,9 @@ import requests
 
 # API SETUP
 URL = "https://courses.ianapplebaum.com"
-api = "/syllabus/1"
-#userHeader = "/api/user"
+syllabusByIdApi = "/syllabus/"
+syllabusApi = "/syllabus/"
+userApi = "/user/"
 key = "QUtKvrHyNHmaBQAeblqzlBd8BAmyn6HSVNrIfzb8"
 
 headers = {
@@ -13,7 +14,29 @@ headers = {
     'Accept': "application/json"
 }
 
-#Sylabus Get
-response = requests.get(URL+api, headers=headers).json()
+# Get request for api/syllabus/{id}
+# Gets a syllabus for a specific semester by (ID)
+def getSyllabusById():
+    fallSemesterId = "4"                                                                # Seems to be the ID number to return the fall 2023 info
+    response = requests.get(URL + syllabusByIdApi + fallSemesterId, headers=headers).json()
+    print(response)
 
-print(response)
+# Get request for api/syllabus/
+# Retrieves every syllabus for every semester
+def getSyllabus():
+    response = requests.get(URL + syllabusApi, headers=headers).json()
+    print(response)
+
+# Get request for api/user/
+# Not working yet
+def getUser():
+    response = requests.get(URL + userApi, headers=headers).json()
+    print(response)
+
+
+if __name__ == '__main__':
+    getSyllabusById()
+    #getSyllabus()
+    #getUser()
+
+
