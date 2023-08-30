@@ -1,5 +1,6 @@
-
 # API doc https://courses.ianapplebaum.com/public/docs/
+from datetime import timedelta
+
 import requests
 import json
 from email_server import send_email
@@ -41,6 +42,7 @@ headers = {
     'Accept': "application/json"
 }
 
+
 # Get request for api/syllabus/{id}
 # Gets a syllabus for a specific semester by (ID)
 
@@ -53,6 +55,7 @@ def getSyllabusById():
     # print(response)
     return response
 
+
 # Get request for api/syllabus/
 # Retrieves every syllabus for every semester
 
@@ -60,6 +63,7 @@ def getSyllabusById():
 def getSyllabus():
     response = requests.get(URL + syllabusApi, headers=headers).json()
     print(response)
+
 
 # Get request for api/user/
 # Not working yet
@@ -69,12 +73,12 @@ def getUser():
     response = requests.get(URL + userApi, headers=headers).json()
     print(response)
 
+
 # TODO Parse the json here
 # Returns an array of event objects
 
 
 def parseSyllabus(response):
-
     events = response['events']
     eventObjects = []
     for event in events:
@@ -88,19 +92,46 @@ def parseSyllabus(response):
     for eventObj in eventObjects:
         print(eventObj)
         print("---------------------------\n")
-    
+
     return eventObjects
 
+
 def formatemail(object):
-    message = "Hi,\n\nThis is a reminder that assignment {} is due on {}\n\nAssignment Description: {}\n\nPlease go on your Canvas for more information!".format(object.event_name, object.event_date, object.event_description)
+    message = ("Hi,\n\nThis is a reminder that assignment {} is due on {}\n\nAssignment Description: {}\n\nPlease go "
+               "on your Canvas for more information!").format(object.event_name, object.event_date,
+                                                              object.event_description)
 
     return message
+
+
+def send_due_dates_reminders(events):
+    from datetime import datetime
+    current_date = datetime.now()
+
+    notification_date = current_date + timedelta(days=1)
+    day_notification_date = notification_date.day
+    month_notification_date = notification_date.month
+
+    for event in events:
+        due_date = datetime.strptime(event.event_date, "%Y-%m-%d")
+        day_due_date = due_date.day
+        month_due_date = due_date.month
+
+        if day_due_date == day_notification_date and month_due_date == month_notification_date:
+            subject = "Reminder!"
+            message = formatemail(event)
+            recipient_list = ['tuo17432@temple.edu', 'tuh18583@temple.edu', 'tul11082@temple.edu', 'tul51449@temple.edu' ]
+            send_email(subject, message, recipient_list)
+
 
 if __name__ == '__main__':
     response = getSyllabusById()
     eventlist = parseSyllabus(response)
-    recipient_list = ['tuo17432@temple.edu', 'tuh18583@temple.edu', 'tul11082@temple.edu', 'tul51449@temple.edu' ]
-    send_email("Reminder!", formatemail(eventlist[1]), recipient_list)
+    # recipient_list = ['tuo17432@temple.edu', 'tuh18583@temple.edu', 'tul11082@temple.edu', 'tul51449@temple.edu' ]
+
+    # send_email("Reminder!", formatemail(eventlist[1]), recipient_list)
+
+    send_due_dates_reminders(eventlist)
 
     # getSyllabus()
     # getUser()
