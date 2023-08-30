@@ -36,6 +36,3 @@ def send_email(subject, body, to_emails):
     except Exception as e:
         print(f'Error sending email: {e}')
 
-# send emails
-recipient_list = ['tuo17432@temple.edu', 'tuh18583@temple.edu', 'tul11082@temple.edu', 'tul51449@temple.edu' ]
-send_email('Reminder', 'This is your reminder email!', recipient_list)
