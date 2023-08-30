@@ -2,6 +2,7 @@
 # API doc https://courses.ianapplebaum.com/public/docs/
 import requests
 import json
+from email_server import send_email
 
 
 class Event:
@@ -87,10 +88,19 @@ def parseSyllabus(response):
     for eventObj in eventObjects:
         print(eventObj)
         print("---------------------------\n")
+    
+    return eventObjects
 
+def formatemail(object):
+    message = "Hi,\n\nThis is a reminder that assignment {} is due on {}\n\nAssignment Description: {}\n\nPlease go on your Canvas for more information!".format(object.event_name, object.event_date, object.event_description)
+
+    return message
 
 if __name__ == '__main__':
     response = getSyllabusById()
-    parseSyllabus(response)
+    eventlist = parseSyllabus(response)
+    recipient_list = ['tuo17432@temple.edu', 'tuh18583@temple.edu', 'tul11082@temple.edu', 'tul51449@temple.edu' ]
+    send_email("Reminder!", formatemail(eventlist[1]), recipient_list)
+
     # getSyllabus()
     # getUser()
